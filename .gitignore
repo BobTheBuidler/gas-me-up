@@ -4,3 +4,4 @@ __pycache__
 build/
 env/
 my_details.py
+.DS_Store
