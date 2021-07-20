@@ -1,5 +1,6 @@
 
-from brownie import chain, Contract, convert
+from threading import Event
+from brownie import chain, Contract, convert, network
 from brownie.network.event import EventLookupError
 from brownie.network.web3 import _resolve_address
 from ..my_details import handle, my_addresses
@@ -61,7 +62,6 @@ def fetch_filtered_txs_list():
         
         df = all if df is None else df.append(all)
         counter = len(df)
-        print(df.columns)
         for i, row in df.iterrows():
             hash = row['hash']
             receipt = chain.get_transaction(hash)
@@ -80,19 +80,55 @@ def fetch_filtered_txs_list():
                         spender = Contract(event['spender'])
                     except EventLookupError:
                         spender = Contract(event['guy'])
-                
-                print(spender)
+                try:
+                    value = event['amount']
+                except EventLookupError:
+                    try:
+                        value = event['value']
+                    except EventLookupError:
+                        try:
+                            value = event['_value']
+                        except:
+                            value = event['wad']
+                value = value / 10 ** token.decimals()
                 print(f"approved token {symbol} to {spender.__dict__['_build']['contractName']} {spender}")
+            elif fn_name == 'transfer':
+                event = receipt.events['Transfer'][0]
+                token = Contract(event.address)
+                symbol = token.symbol()
+                try:
+                    recip = Contract(event['dst'])
+                except ValueError:
+                    recip = event['dst']
+                try:
+                    value = event['amount']
+                except EventLookupError:
+                    try:
+                        value = event['value']
+                    except EventLookupError:
+                        try:
+                            value = event['_value']
+                        except:
+                            value = event['wad']
+                value = value / 10 ** token.decimals()
+                try:
+                    print(f"transfered {value} {symbol} to {recip.__dict__['_build']['contractName']} {recip}")
+                except KeyError:
+                    print(f"transfered {value} {symbol} to {recip}")
+            elif fn_name is None:
+                try:
+                    print(f"sent {int(row['value']) / 10 ** 18} ETH to: {to.__dict__['_build']['contractName']} {to}")
+                except AttributeError:
+                    print(f"sent {int(row['value']) / 10 ** 18} ETH to: {to}")
             else:
                 print(f"called function: {fn_name}")
                 try:
                     to = Contract(row['to'])
                 except (UnboundLocalError, ValueError):
                     to = row['to']
-                if len(fn_name) > 0:
-                    print(f"on contract: {to.__dict__['_build']['contractName']} {to}")
-                else:
-                    print(f"to: {to.__dict__['_build']['contractName']} {to}")
+                print(f"on contract: {to.__dict__['_build']['contractName']} {to}")
+            print(f"gas used: {int(row['gasUsed']) * int(row['gasPrice']) / 10 ** 18} ETH")
+                    
             print(' ')
             keep = click.confirm('Should this tx be reimbursed?')
             if not keep:
@@ -111,6 +147,6 @@ def main():
     df = fetch_filtered_txs_list()
     print(df)
     counter = len(df)
-    print(df.columns)
-    
+    df.drop(['gas'], axis=1)
+    df.drop(['gas'], axis=1)
     df.to_csv(f'pending/{handle}.csv', 'w', index=False)
