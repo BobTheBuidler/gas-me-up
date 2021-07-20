@@ -3,7 +3,7 @@ from threading import Event
 from brownie import chain, Contract, convert, network
 from brownie.network.event import EventLookupError
 from brownie.network.web3 import _resolve_address
-from ..my_details import handle, my_addresses
+from ..my_details import handle, my_addresses, skip_confirm
 from pprint import pprint
 import os, csv, requests, pandas, click
 from datetime import datetime
@@ -134,12 +134,12 @@ def fetch_filtered_txs_list():
             print(f"gas used: {int(row['gasUsed']) * int(row['gasPrice']) / 10 ** 18} ETH")
                     
             print(' ')
-            keep = click.confirm('Should this tx be reimbursed?')
-            if not keep:
-                df.drop(i)
-            counter -= 1
-            print(f"{counter} remaining")
-
+            if not skip_confirm:
+                keep = click.confirm('Should this tx be reimbursed?')
+                if not keep:
+                    df.drop(i)
+                counter -= 1
+                print(f"{counter} remaining")
         if len(df) > 0:
             endBlock = all['blockNumber'].max()
             checkpoint(address,endBlock)
