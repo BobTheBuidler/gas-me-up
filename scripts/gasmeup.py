@@ -87,7 +87,7 @@ def fetch_filtered_txs_list():
                 print(f"called function: {fn_name}")
                 try:
                     to = Contract(row['to'])
-                except ValueError:
+                except (UnboundLocalError, ValueError):
                     to = row['to']
                 if len(fn_name) > 0:
                     print(f"on contract: {to.__dict__['_build']['contractName']} {to}")
