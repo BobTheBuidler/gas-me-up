@@ -13,7 +13,7 @@ def read_checkpoint(address):
     try:
         with open(f'checkpoints/{address}.csv','r') as checkpoints:
             rows = csv.reader(checkpoints)
-            rows = rows
+            #rows = rows
             for row in rows:
                 startBlock = int(row[0]) + 1
         print(f"last checkpoint at block {startBlock}")
