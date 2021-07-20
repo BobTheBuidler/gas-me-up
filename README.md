@@ -4,7 +4,7 @@ You will need to set the following environment variables:
  - $ETHERSCAN_TOKEN
 
 To use this tool as a contributor:
- 1. Copy the my_details_TEMPLATE.py
+ 1. Copy the my_details_TEMPLATE.py file
  2. Rename your copy to my_details.py
  3. Specify your address(es) in the 'my_addresses' list in my_details.py
     (ENS domain names will work)
