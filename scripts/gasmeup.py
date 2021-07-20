@@ -46,6 +46,7 @@ def fetch_internal_txs(address, startBlock):
         item['tx_type'] = 'internal'
         item['from'] = convert.to_address(item['from'])
     df = pandas.DataFrame(response)
+    df = df[df['isError'] == 0]
     if(len(df)) > 0:
         return df[df['from'] == address]
     return df
