@@ -147,7 +147,6 @@ def fetch_filtered_txs_list():
 def main():
     df = fetch_filtered_txs_list()
     print(df)
-    counter = len(df)
-    df.drop(['gas'], axis=1)
-    df.drop(['gas'], axis=1)
-    df.to_csv(f'pending/{handle}.csv', 'w', index=False)
+    df.to_csv(f'pending/{handle}.csv', index=False)
+    print('export successful!')
+    print('please make a PR to submit your reimbursements to the DAO')
