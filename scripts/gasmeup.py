@@ -67,7 +67,7 @@ def fetch_filtered_txs_list():
             receipt = chain.get_transaction(hash)
             fn_name = receipt.fn_name
             print(' ')
-            print(f"hash: {hash}")
+            print(f"tx: https://etherscan.io/tx/{hash}")
             print(f"timestamp: {datetime.utcfromtimestamp(int(row['timeStamp']))} UTC")
             if fn_name == 'approve':
                 event = receipt.events['Approval'][0]
