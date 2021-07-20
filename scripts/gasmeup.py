@@ -124,9 +124,10 @@ def fetch_filtered_txs_list():
                 print(f"called function: {fn_name}")
                 try:
                     to = Contract(row['to'])
+                    print(f"on contract: {to.__dict__['_build']['contractName']} {to}")
                 except (UnboundLocalError, ValueError):
                     to = row['to']
-                print(f"on contract: {to.__dict__['_build']['contractName']} {to}")
+                    print(f"on: {to}")
             print(f"gas used: {int(row['gasUsed']) * int(row['gasPrice']) / 10 ** 18} ETH")
                     
             print(' ')
