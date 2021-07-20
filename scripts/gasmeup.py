@@ -120,6 +120,9 @@ def fetch_filtered_txs_list():
                     print(f"sent {int(row['value']) / 10 ** 18} ETH to: {to.__dict__['_build']['contractName']} {to}")
                 except AttributeError:
                     print(f"sent {int(row['value']) / 10 ** 18} ETH to: {to}")
+            elif row['contractAddress']:
+                deployed = Contract(row['contractAddress'])
+                print(f"deployed contract {to.__dict__['_build']['contractName']} {deployed}")
             else:
                 print(f"called function: {fn_name}")
                 try:
