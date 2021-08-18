@@ -101,7 +101,7 @@ def fetch_filtered_txs_list():
         #all = txs.append(internal_txs)
         all = txs
 
-        all['totalGasInWei'] = all['gasUsed'].apply(int) * all['gasPrice'].apply(int)
+        all['weiSpentOnGas'] = all['gasUsed'].apply(int) * all['gasPrice'].apply(int)
         
         df = all if df is None else df.append(all)
         counter = len(df)
@@ -148,7 +148,7 @@ def fetch_filtered_txs_list():
                     except (UnboundLocalError, ValueError):
                         to = row['to']
                         print(f"on: {to}")
-                print(f"gas used: {row['totalGasInWei']} ETH")
+                print(f"gas used: {row['weiSpentOnGas']} ETH")
                 print(' ')
                 keep = click.confirm('Should this tx be reimbursed?')
                 if not keep:
@@ -157,7 +157,7 @@ def fetch_filtered_txs_list():
                 print(f"{counter} remaining")
         if len(df) > 0:
             endBlock = all['blockNumber'].max()
-            all.loc['Total', 'totalGasInWei']= all['totalGasInWei'].sum()
+            all.loc['Total', 'weiSpentOnGas']= all['weiSpentOnGas'].sum()
             checkpoint(address,endBlock)
         else:
             print('no new reimbursement txs for this address')
