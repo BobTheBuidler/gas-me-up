@@ -9,4 +9,5 @@ my_addresses = [
     "",
 ]
 
+# NOTE: Fill this with the address you'd like your reimbursement sent to
 reimbursement_address = ''
