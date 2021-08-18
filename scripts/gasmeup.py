@@ -8,12 +8,17 @@ def main():
     output = process.communicate()[0]
     print(output)
 
-    #run('scripts/gasmeup')
+    run('scripts/process')
+
     process = subprocess.Popen(["git", "add", "--all"], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print(output)
 
     commitmsg = f'{handle} thru {datetime.utcnow()}'
     process = subprocess.Popen(["git", "commit", "-m", commitmsg], stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    print(output)
+
+    process = subprocess.Popen(["git", "push"], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print(output)
