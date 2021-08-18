@@ -101,7 +101,7 @@ def fetch_filtered_txs_list():
         #all = txs.append(internal_txs)
         all = txs
 
-        all['weiSpentOnGas'] = all['gasUsed'].apply(int) * all['gasPrice'].apply(int)
+        all['weiSpentOnGas'] = int(all['gasUsed'].apply(int) * all['gasPrice'].apply(int))
         
         df = all if df is None else df.append(all)
         counter = len(df)
