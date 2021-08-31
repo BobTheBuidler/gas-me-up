@@ -82,10 +82,16 @@ def ValueToken(event,token):
                 return event['wad'] / 10 ** token.decimals()
 
 def Recipient(event):
+    print(event)
     try:
         return Contract(event['dst'])
     except ValueError:
         return event['dst']
+    except EventLookupError:
+        try:
+            return Contract(event['to'])
+        except ValueError:
+            return event['to']
 
 
 def fetch_filtered_txs_list():
