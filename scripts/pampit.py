@@ -6,11 +6,11 @@ def main():
     files = [file for file in os.listdir('./pending') if file != 'EVERYBODY.csv']
     all = []
     for filename in files:
-        handle = filename[:-4]
+        handle = filename[45:-4]
+        reimbursement_address = filename[:42]
         filepath = f"./pending/{filename}"
         df = pd.read_csv(filepath)
-        df['weiSpentOnGas'] = df.gasUsed * df.gasPrice
-
+        df = df.iloc[:-1 , :] # NOTE: Drop last row, its just a total row. We don't need that.
         totalWei = sum(df['weiSpentOnGas'])
         totalEth = totalWei / 10 ** 18
         totalNonGas = sum(df['value'])
@@ -19,7 +19,6 @@ def main():
         print(totalNonGas)
         #totalWei += totalNonGas
         #totalEth += totalNonGas / 10 ** 18
-        print(df)
         try:
             comment = HANDLE_TO_COMMENT[handle]
         except KeyError:
@@ -42,7 +41,7 @@ def main():
         print(response)
         details = {
             'id': None,
-            'address': None,
+            'address': reimbursement_address,
             'name': handle,
             'eth': totalEth,
             'raw': totalWei,
