@@ -155,7 +155,7 @@ def fetch_filtered_txs_list():
                     except (UnboundLocalError, ValueError):
                         to = row['to']
                         print(f"on: {to}")
-                print(f"gas used: {row['weiSpentOnGas']} ETH")
+                print(f"gas used: {row['weiSpentOnGas']} wei")
                 print(' ')
                 keep = click.confirm('Should this tx be reimbursed?')
                 if not keep:
