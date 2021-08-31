@@ -19,6 +19,6 @@ def main():
     output = process.communicate()[0]
     print(output)
 
-    process = subprocess.Popen(["git", "push"], stdout=subprocess.PIPE)
+    process = subprocess.Popen(["git", "pull-request"], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print(output)
