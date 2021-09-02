@@ -126,18 +126,27 @@ def fetch_filtered_txs_list():
                 print(f"tx: https://etherscan.io/tx/{hash}")
                 print(f"timestamp: {datetime.utcfromtimestamp(int(row['timeStamp']))} UTC")
 
-                # NOTE: we do this so we know for sure brownie will find the events we're looking for
-                eventcontractgetter = [Contract(address) for address in set(event.address for event in receipt.events)]
+                
 
                 if fn_name == 'approve':
-                    event = receipt.events['Approval'][0]
+                    try:
+                        event = receipt.events['Approval'][0]
+                    except EventLookupError:
+                        # NOTE: we do this so we know for sure brownie will find the events we're looking for
+                        eventcontractgetter = [Contract(address) for address in set(event.address for event in receipt.events)]
+                        event = receipt.events['Approval'][0]
                     token = Contract(event.address)
                     symbol = token.symbol()
                     spender = Spender(event)
                     value = ValueToken(event,token)
                     print(f"approved {value} {symbol} to {spender.__dict__['_build']['contractName']} {spender}")
                 elif fn_name == 'transfer':
-                    event = receipt.events['Transfer'][0]
+                    try:
+                        event = receipt.events['Transfer'][0]
+                    except EventLookupError:
+                        # NOTE: we do this so we know for sure brownie will find the events we're looking for
+                        eventcontractgetter = [Contract(address) for address in set(event.address for event in receipt.events)]
+                        event = receipt.events['Transfer'][0]
                     token = Contract(event.address)
                     symbol = token.symbol()
                     recip = Recipient(event)
