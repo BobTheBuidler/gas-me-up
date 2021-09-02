@@ -92,6 +92,11 @@ def Recipient(event):
             return Contract(event['to'])
         except ValueError:
             return event['to']
+        except EventLookupError:
+            try:
+                return Contract(event['receiver'])
+            except ValueError:
+                return event['receiver']
 
 
 def fetch_filtered_txs_list():
@@ -120,7 +125,7 @@ def fetch_filtered_txs_list():
                 print(' ')
                 print(f"tx: https://etherscan.io/tx/{hash}")
                 print(f"timestamp: {datetime.utcfromtimestamp(int(row['timeStamp']))} UTC")
-                
+
                 # NOTE: we do this so we know for sure brownie will find the events we're looking for
                 eventcontractgetter = [Contract(address) for address in set(event.address for event in receipt.events)]
 
