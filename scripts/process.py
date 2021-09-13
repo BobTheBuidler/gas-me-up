@@ -2,6 +2,7 @@
 from threading import Event
 from brownie import chain, Contract, convert, network
 from brownie.network.event import EventLookupError
+from brownie.network.contract import ContractNotFound
 from brownie.network.web3 import _resolve_address
 from ..my_details import handle, my_addresses, skip_confirm, reimbursement_address
 from pprint import pprint
@@ -163,8 +164,11 @@ def fetch_filtered_txs_list():
                     except AttributeError:
                         print(f"sent {int(row['value']) / 10 ** 18} ETH to: {to}")
                 elif row['contractAddress']:
-                    deployed = Contract(row['contractAddress'])
-                    print(f"deployed contract {deployed.__dict__['_build']['contractName']} {deployed}")
+                    try:
+                        deployed = Contract(row['contractAddress'])
+                        print(f"deployed contract {deployed.__dict__['_build']['contractName']} {deployed}")
+                    except ContractNotFound:
+                        print(f"failed contract deployment at {row['contractAddress']}")
                 else:
                     print(f"called function: {fn_name}")
                     try:
