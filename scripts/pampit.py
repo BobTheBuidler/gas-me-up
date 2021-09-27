@@ -3,9 +3,10 @@ import pandas as pd
 from ..team_details import DEFAULT_COMMENT, HANDLE_TO_COMMENT
 
 def main():
-    files = [file for file in os.listdir('./pending') if file != 'EVERYBODY.csv']
+    files = [file for file in os.listdir('./pending') if file not in ['EVERYBODY.csv','thisfileisjustheresogitknowsthefolderexists.py']]
     all = []
     for filename in files:
+        print(filename)
         handle = filename[45:-4]
         reimbursement_address = filename[:42]
         filepath = f"./pending/{filename}"
@@ -17,6 +18,7 @@ def main():
         print(totalWei)
         print(totalEth)
         print(totalNonGas)
+        print(df)
         #totalWei += totalNonGas
         #totalEth += totalNonGas / 10 ** 18
         try:
@@ -25,20 +27,20 @@ def main():
             comment = DEFAULT_COMMENT
         with open(filepath,'r') as file:
             filecontents = file.read()
-        print(filecontents)
-        auth_token = f"token {os.environ['GH_PERSONAL_AUTH_TOKEN']}"
-        print(auth_token)
+        #print(filecontents)
+        #auth_token = f"token {os.environ['GH_PERSONAL_AUTH_TOKEN']}"
+        #print(auth_token)
         data = {
             filename: {
                 'content': filecontents
             }
         }
-        headers = {
-            'Authoriation': auth_token
-        }
+        #headers = {
+        #    'Authoriation': auth_token
+        #}
         params={'scope':'gist'}
-        response = requests.post('https://api.github.com/gists',headers=headers,params=params,data=data).json()
-        print(response)
+        #response = requests.post('https://api.github.com/gists',headers=headers,params=params,data=data).json()
+        #print(response)
         details = {
             'id': None,
             'address': reimbursement_address,
@@ -52,5 +54,5 @@ def main():
         all.append(details)
         
     df = pd.DataFrame(all)
-    df.to_csv('pending/EVERYBODY.csv')
+    df.to_csv('pending/EVERYBODY.csv', index=False)
     print(df)
